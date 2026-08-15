@@ -1,7 +1,9 @@
+from time import sleep
 from typing import List, Optional
 
 from fastapi import APIRouter, Cookie, Form, Header, Response
 from fastapi.responses import HTMLResponse, PlainTextResponse
+from custom_log import log
 
 
 router = APIRouter(
@@ -11,13 +13,19 @@ router = APIRouter(
 
 products = ['watch', 'camera', 'phone']
 
+async def time_consuming_functionality():
+    sleep(5)
+    return 'ok'
+
 @router.post('/new')
 def create_product(name: str = Form(...)):
     products.append(name)
     return products
 
 @router.get('/all')
-def get_all_product():
+async def get_all_product():
+    await time_consuming_functionality()
+    log('MyApi', 'Call to get all products')
     # return products
     data = " ".join(products)
     response = Response(content=data, media_type='text/plain')

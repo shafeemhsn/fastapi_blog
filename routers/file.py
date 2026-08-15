@@ -2,7 +2,6 @@ import shutil
 
 from fastapi import APIRouter, File, UploadFile
 from fastapi.responses import FileResponse
-from httpx import patch
 
 
 router = APIRouter(
