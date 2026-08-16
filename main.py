@@ -1,8 +1,8 @@
 from http.client import HTTPException
 import time
 
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi import FastAPI, Request, WebSocket
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from db import models
 from db.database import engine
 from exceptions import StoryException
@@ -11,6 +11,8 @@ from templates import templates
 from fastapi.middleware.cors import CORSMiddleware
 from auth import authentication
 from fastapi.staticfiles import StaticFiles
+
+from client import html
 
 
 app = FastAPI()
@@ -24,9 +26,9 @@ app.include_router(blog_get.router)
 app.include_router(blog_post.router)
 
 
-@app.get('/')
-def index():
-    return 'Hello world' 
+# @app.get('/')
+# def index():
+#     return 'Hello world' 
 
 @app.exception_handler(StoryException)
 def story_exception_handler(request: Request, exc: StoryException):
@@ -34,6 +36,24 @@ def story_exception_handler(request: Request, exc: StoryException):
         status_code=418,
         content={'detail': exc.name}
     )
+
+@app.get("/")
+async def get():
+    return HTMLResponse(content=html)
+
+clients: list[WebSocket] = []
+
+@app.websocket("/chat")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    clients.append(websocket)
+    while True:
+        data = await websocket.receive_text()
+
+        for client in clients:
+            await client.send_text(data)
+
+
 
 # @app.exception_handler(HTTPException)
 # def custom_handler(request: Request, exc: StoryException):

@@ -234,6 +234,7 @@ dependencies = [
     { name = "pyjwt" },
     { name = "python-multipart" },
     { name = "sqlalchemy" },
+    { name = "websockets" },
 ]
 
 [package.dev-dependencies]
@@ -250,6 +251,7 @@ requires-dist = [
     { name = "pyjwt", specifier = ">=2.13.0" },
     { name = "python-multipart", specifier = ">=0.0.32" },
     { name = "sqlalchemy", specifier = ">=2.0.51" },
+    { name = "websockets", specifier = ">=17.0.1" },
 ]
 
 [package.metadata.requires-dev]
