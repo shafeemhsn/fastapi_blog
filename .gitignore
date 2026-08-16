@@ -19,3 +19,6 @@ files
 *.db-journal
 *.db-shm
 *.db-wal
+
+# Log file
+log.txt
